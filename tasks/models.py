@@ -1,6 +1,13 @@
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from core.tenant import get_org 
+
+class TenantManager(models.Manager):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        org_id = get_org()
+        return qs.filter(organization_id=org_id) if org_id else qs.none()
 
 class Task(models.Model):
     title = models.CharField(max_length=255)
@@ -9,7 +16,8 @@ class Task(models.Model):
     priority = models.IntegerField(default=0)
     deadline_datetime_with_tz = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    objects = TenantManager()          # ← always tenant-scoped
+    all_objects = models.Manager()     # ← unscoped (admin/scripts)
     organization = models.ForeignKey("users.Organization", on_delete=models.CASCADE, related_name="tasks")
     assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                     on_delete=models.SET_NULL, related_name="tasks")

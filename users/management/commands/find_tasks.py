@@ -18,7 +18,7 @@ class Command(BaseCommand):
         order_by = opts["order_by"]
         limit = opts["limit"]
 
-        qs = Task.objects.filter(organization__name=org)
+        qs = Task.all_objects.filter(organization__name=org)
 
         for item in metas:
             if "=" not in item:
