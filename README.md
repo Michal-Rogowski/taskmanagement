@@ -1,6 +1,10 @@
-# taskmanagement
-interview test assignment 
+# Task Management (Django + Ninja)
 
-
-changelog 
-21.08.2025 warm-up: latest django and nina, dual db config, scaffold, tasks list with dynamic 'metadata[...]' filters. 
+## Quickstart
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python.manage.py demo_data
+python manage.py test
+python manage.py runserver
