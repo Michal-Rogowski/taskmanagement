@@ -62,3 +62,7 @@ class TasksApiMultiTenancyTest(TestCase):
         items = res.json()["items"]
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0]["title"], "A1")
+
+    def test_list_requires_authentication(self):
+        res = self.client.get(f"{BASE}/tasks/")
+        self.assertEqual(res.status_code, 401)
