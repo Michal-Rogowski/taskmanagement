@@ -1,6 +1,7 @@
 from core.tenant import set_org
 from auth.jwt import decode_token
 from users.models import User
+from django.conf import settings
 
 class OrganizationMiddleware:
     def __init__(self, get_response):
@@ -31,7 +32,7 @@ class OrganizationMiddleware:
                         org_id = None
 
             # 3) fallback (only for dev/testing)
-            if not org_id:
+            if settings.DEBUG and not org_id:
                 q = request.GET.get("org_id")
                 if q and q.isdigit():
                     org_id = int(q)
