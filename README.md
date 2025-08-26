@@ -16,12 +16,7 @@ Copy `.env.example` to `.env` and adjust as needed:
 | --- | --- | --- |
 | SECRET_KEY | Django secret key used for cryptographic signing. | changeme |
 | DEBUG | Enable debug mode (`1` turns it on). | 1 |
-| DB_ENGINE | Database backend (`sqlite` or `postgres`). | sqlite |
-| DB_NAME | Postgres database name when using `postgres`. | multitenant |
-| DB_USER | Postgres user when using `postgres`. | postgres |
-| DB_PASSWORD | Postgres user's password. | password |
-| DB_HOST | Postgres host. | localhost |
-| DB_PORT | Postgres port. | 5432 |
+| SQLITE_PATH | Path to the SQLite database file. | /var/app/data/db.sqlite3 |
 | ALLOW_ORG_OVERRIDE | Allow dev-only `org_id` query override. | 0 |
 
 ## Multi-Tenancy
@@ -40,7 +35,7 @@ data leaks.
 
 ## Deployment Notes
 - Generate a strong `SECRET_KEY` and set `DEBUG=0` in production.
-- Configure database credentials and run migrations.
+- Run migrations to initialize the SQLite database.
 - Execute `python manage.py collectstatic` for static assets.
 - Serve the app with a production-ready server such as `gunicorn` or `uvicorn`.
 - A sample `render.yaml` is provided for deployment on Render.

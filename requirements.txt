@@ -2,8 +2,6 @@ Django>=5.2,<6.0
 django-ninja>=1.4.3
 PyJWT>=2.9
 python-dotenv>=1.0.1
-psycopg[binary]>=3.1 ; platform_system != "Windows"
-psycopg>=3.1 ; platform_system == "Windows"
 coverage>=7.6
 gunicorn
 whitenoise

@@ -72,26 +72,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-DATABASE_ENGINE = os.getenv("DB_ENGINE", "sqlite")
-if DATABASE_ENGINE == "postgres":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME", "multitenant"),
-            "USER": os.getenv("DB_USER", "postgres"),
-            "PASSWORD": os.getenv("DB_PASSWORD", "password"),
-            "HOST": os.getenv("DB_HOST", "localhost"),
-            "PORT": os.getenv("DB_PORT", "5432"),
-        }
+DB_FILE = os.getenv("SQLITE_PATH", "/var/app/data/db.sqlite3")
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": DB_FILE,
     }
-else:
-    DB_FILE = os.getenv("SQLITE_PATH", "/var/app/data/db.sqlite3")
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": DB_FILE,
-        }
-    }
+}
     
 
 AUTH_USER_MODEL = "users.User"
