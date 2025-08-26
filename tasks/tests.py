@@ -1,10 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from django.core.management import call_command
 from io import StringIO
 from users.models import Organization, User
 from .models import Task
 from django.core.exceptions import ValidationError
 from core.tenant import set_org
+from .schemas import TaskIn
 
 
 class TaskModelTest(TestCase):
@@ -48,3 +49,11 @@ class FindTasksCommandTest(TestCase):
         out = StringIO()
         call_command("find_tasks", "--org", "TestOrg", "--meta", "priority__gt=2", stdout=out)
         self.assertIn("A1", out.getvalue())
+
+
+class TaskSchemaDefaultTest(SimpleTestCase):
+    def test_taskin_metadata_default_is_unique(self):
+        t1 = TaskIn(title="One")
+        t2 = TaskIn(title="Two")
+        t1.metadata["a"] = 1
+        self.assertEqual(t2.metadata, {})
