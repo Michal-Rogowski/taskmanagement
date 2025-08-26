@@ -139,6 +139,7 @@ class Migration(migrations.Migration):
                 (
                     "organization",
                     models.ForeignKey(
+
                         null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="users",
