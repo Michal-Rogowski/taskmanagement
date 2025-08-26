@@ -1,8 +1,5 @@
 import json
-from datetime import datetime
-from urllib import response
 from django.utils.dateparse import parse_datetime
-from django.db.models import Q
 from ninja import Router
 from ninja.errors import HttpError
 from .models import Task
