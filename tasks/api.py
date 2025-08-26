@@ -172,4 +172,4 @@ def delete_task(request, task_id: int):
     except Task.DoesNotExist:
         raise HttpError(404, "Not found")
     t.delete()
-    return Response(status=204)
+    return Response(None, status=204)
