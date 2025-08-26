@@ -12,6 +12,14 @@ from ninja.responses import Response
 
 router = Router()
 
+
+def _require_auth(request):
+    """Ensure the request user is authenticated or raise 401."""
+    user = getattr(request, "user", None)
+    if not getattr(user, "is_authenticated", False):
+        raise HttpError(401, "Unauthorized")
+    return user
+
 def _coerce(v: str):
     try:
         return json.loads(v)
@@ -40,6 +48,7 @@ def _parse_dt(dt_str: str | None):
 
 @router.get("/", response=CursorPage)
 def list_tasks(request, limit: int = 20, cursor: str | None = None):
+    _require_auth(request)
     # Tenant scoping is done by Task.objects (TenantManager)
     qs = Task.objects.all()
     qs = _apply_metadata_filters(qs, request)
@@ -80,9 +89,7 @@ def list_tasks(request, limit: int = 20, cursor: str | None = None):
 
 @router.post("/", response={201: TaskOut})
 def create_task(request, payload: TaskIn):
-    user = getattr(request, "user", None)
-    if not getattr(user, "is_authenticated", False):
-        raise HttpError(401, "Unauthorized")
+    user = _require_auth(request)
     org = user.organization
 
     assigned = None
@@ -116,8 +123,7 @@ def create_task(request, payload: TaskIn):
 
 @router.put("/{task_id}/", response=TaskOut)
 def update_task(request, task_id: int, payload: TaskUpdate):
-    if not getattr(getattr(request, "user", None), "is_authenticated", False):
-        raise HttpError(401, "Unauthorized")
+    _require_auth(request)
 
     # Scoped manager ensures same‑org; 404 if not found
     try:
@@ -163,8 +169,7 @@ def update_task(request, task_id: int, payload: TaskUpdate):
 
 @router.delete("/{task_id}/")
 def delete_task(request, task_id: int):
-    if not getattr(getattr(request, "user", None), "is_authenticated", False):
-        raise HttpError(401, "Unauthorized")
+    _require_auth(request)
     try:
         t = Task.objects.get(pk=task_id)  # scoped → same‑org only
     except Task.DoesNotExist:
