@@ -29,5 +29,3 @@ Copy `.env.example` to `.env` and adjust as needed:
 - username: `alice`
 - password: `1234`
 
-## Time Tracking
-Each task records timestamps so you can track how long work takes.
