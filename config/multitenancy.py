@@ -1,3 +1,5 @@
+import os
+
 from core.tenant import set_org
 from auth.jwt import decode_token
 from users.models import User
@@ -32,7 +34,11 @@ class OrganizationMiddleware:
                         org_id = None
 
             # 3) fallback (only for dev/testing)
-            if settings.DEBUG and not org_id:
+            if (
+                settings.DEBUG
+                and not org_id
+                and os.environ.get("ALLOW_ORG_OVERRIDE")
+            ):
                 q = request.GET.get("org_id")
                 if q and q.isdigit():
                     org_id = int(q)
