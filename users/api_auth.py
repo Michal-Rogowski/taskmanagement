@@ -34,6 +34,7 @@ def me(request):
     return {"id": u.id, "username": u.username, "organization_id": u.organization_id}
 
 
+
 @router.post("/register", response={201: TokenOut})
 def register(request, payload: RegisterIn):
     u = getattr(request, "user", None)
@@ -49,3 +50,4 @@ def register(request, payload: RegisterIn):
         organization=u.organization,
     )
     return 201, {"access_token": create_token(nu, minutes=60 * 8)}
+

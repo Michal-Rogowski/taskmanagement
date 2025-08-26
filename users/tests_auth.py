@@ -46,6 +46,7 @@ class AuthApiTest(TestCase):
         res = self.client.get(f"{BASE}/auth/me")
         self.assertEqual(res.status_code, 401)
 
+
     def test_register_creates_user_and_returns_token(self):
         token = create_token(self.user)
         res = self.client.post(
