@@ -19,16 +19,31 @@ class Command(BaseCommand):
             bob.organization = org_b
         bob.set_password("1234"); bob.save()
 
-        Task.objects.get_or_create(title="Fix bug", organization=org_a,
-            defaults={"assigned_to": alice, "metadata": {"sprint": 21, "priority": 5}})
-        Task.objects.get_or_create(title="Build feat", organization=org_a,
-            defaults={"assigned_to": alice, "metadata": {"sprint": 21, "priority": 2}})
-        Task.objects.get_or_create(title="Write docs", organization=org_a,
-            defaults={"assigned_to": alice, "metadata": {"sprint": 22, "priority": 1}})
+        Task.all_objects.get_or_create(
+            title="Fix bug",
+            organization=org_a,
+            defaults={"assigned_to": alice, "metadata": {"sprint": 21, "priority": 5}},
+        )
+        Task.all_objects.get_or_create(
+            title="Build feat",
+            organization=org_a,
+            defaults={"assigned_to": alice, "metadata": {"sprint": 21, "priority": 2}},
+        )
+        Task.all_objects.get_or_create(
+            title="Write docs",
+            organization=org_a,
+            defaults={"assigned_to": alice, "metadata": {"sprint": 22, "priority": 1}},
+        )
 
-        Task.objects.get_or_create(title="Infra setup", organization=org_b,
-            defaults={"assigned_to": bob, "metadata": {"sprint": 7, "env": "prod"}})
-        Task.objects.get_or_create(title="Cost report", organization=org_b,
-            defaults={"assigned_to": bob, "metadata": {"sprint": 7, "budget": 9000}})
+        Task.all_objects.get_or_create(
+            title="Infra setup",
+            organization=org_b,
+            defaults={"assigned_to": bob, "metadata": {"sprint": 7, "env": "prod"}},
+        )
+        Task.all_objects.get_or_create(
+            title="Cost report",
+            organization=org_b,
+            defaults={"assigned_to": bob, "metadata": {"sprint": 7, "budget": 9000}},
+        )
 
         self.stdout.write(self.style.SUCCESS("Demo data created."))
