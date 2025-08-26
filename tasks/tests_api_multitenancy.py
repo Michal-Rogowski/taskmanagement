@@ -85,7 +85,7 @@ class TasksApiMultiTenancyTest(TestCase):
             content_type="application/json",
             HTTP_AUTHORIZATION=f"Bearer {self.token_alice}",
         )
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 403)
         self.assertEqual(Task.all_objects.get(pk=self.taskB1.id).title, "B1")
 
     def test_cannot_delete_task_from_other_organization(self):
@@ -93,7 +93,7 @@ class TasksApiMultiTenancyTest(TestCase):
             f"{BASE}/tasks/{self.taskB1.id}/",
             HTTP_AUTHORIZATION=f"Bearer {self.token_alice}",
         )
-        self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 403)
         self.assertTrue(Task.all_objects.filter(pk=self.taskB1.id).exists())
 
     def test_list_requires_authentication(self):
