@@ -1,0 +1,94 @@
+{
+  "info": { "name": "TaskManagement API (local)", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "item": [
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/auth/login" },
+        "body": { "mode": "raw", "raw": "{\"username\":\"alice\",\"password\":\"1234\"}" }
+      }
+    },
+    {
+      "name": "Me",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/auth/me" }
+      }
+    },
+    {
+      "name": "List Tasks (limit=2)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/tasks/?limit=2" }
+      }
+    },
+    {
+      "name": "List Tasks (next page - paste next_cursor)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/tasks/?limit=2&cursor={{next_cursor}}" }
+      }
+    },
+    {
+      "name": "Create Task",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/tasks/" },
+        "body": { "mode": "raw", "raw": "{\"title\":\"New task\",\"priority\":3,\"metadata\":{\"sprint\":23}}" }
+      }
+    },
+    {
+      "name": "Update Task (id=1)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/tasks/1/" },
+        "body": { "mode": "raw", "raw": "{\"completed\":true}" }
+      }
+    },
+    {
+      "name": "Delete Task (id=1)",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/tasks/1/" }
+      }
+    },
+    {
+      "name": "List Users",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/users/" }
+      }
+    },
+    {
+      "name": "Create User",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "http://127.0.0.1:8000/api/v1/users/" },
+        "body": { "mode": "raw", "raw": "{\"username\":\"charlie\",\"password\":\"1234\"}" }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "token", "value": "" },
+    { "key": "next_cursor", "value": "" }
+  ]
+}
