@@ -22,12 +22,27 @@ class TasksApiMultiTenancyTest(TestCase):
         self.orgB = Organization.objects.create(name="OrgB")
         User = get_user_model()
         self.alice = User.objects.create_user(username="alice", password="1234", organization=self.orgA)
-        self.bob   = User.objects.create_user(username="bob",   password="1234", organization=self.orgB)
+        self.bob = User.objects.create_user(username="bob", password="1234", organization=self.orgB)
 
         # Tasks per org
-        Task.all_objects.create(title="A1", organization=self.orgA, assigned_to=self.alice, metadata={"sprint": 21, "priority": 5})
-        Task.all_objects.create(title="A2", organization=self.orgA, assigned_to=self.alice, metadata={"sprint": 22, "priority": 2})
-        Task.all_objects.create(title="B1", organization=self.orgB, assigned_to=self.bob,   metadata={"sprint": 7,  "priority": 1})
+        self.taskA1 = Task.all_objects.create(
+            title="A1",
+            organization=self.orgA,
+            assigned_to=self.alice,
+            metadata={"sprint": 21, "priority": 5},
+        )
+        self.taskA2 = Task.all_objects.create(
+            title="A2",
+            organization=self.orgA,
+            assigned_to=self.alice,
+            metadata={"sprint": 22, "priority": 2},
+        )
+        self.taskB1 = Task.all_objects.create(
+            title="B1",
+            organization=self.orgB,
+            assigned_to=self.bob,
+            metadata={"sprint": 7, "priority": 1},
+        )
 
         # Tokens
         self.token_alice = login(self.client, "alice", "1234")
@@ -62,6 +77,24 @@ class TasksApiMultiTenancyTest(TestCase):
         items = res.json()["items"]
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0]["title"], "A1")
+
+    def test_cannot_update_task_from_other_organization(self):
+        res = self.client.put(
+            f"{BASE}/tasks/{self.taskB1.id}/",
+            data=json.dumps({"title": "Hacked"}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Bearer {self.token_alice}",
+        )
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(Task.all_objects.get(pk=self.taskB1.id).title, "B1")
+
+    def test_cannot_delete_task_from_other_organization(self):
+        res = self.client.delete(
+            f"{BASE}/tasks/{self.taskB1.id}/",
+            HTTP_AUTHORIZATION=f"Bearer {self.token_alice}",
+        )
+        self.assertEqual(res.status_code, 404)
+        self.assertTrue(Task.all_objects.filter(pk=self.taskB1.id).exists())
 
     def test_list_requires_authentication(self):
         res = self.client.get(f"{BASE}/tasks/")
