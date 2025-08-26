@@ -18,7 +18,7 @@ def list_users(request):
     u = getattr(request, "user", None)
     if not getattr(u, "is_authenticated", False):
         raise HttpError(401, "Unauthorized")
-    qs = User.objects.filter(organization=u.organization).order_by("id")
+    qs = User.objects.all().order_by("id")
     return [UserOut(id=i.id, username=i.username) for i in qs]
 
 @router.post("/", response={201: UserOut})

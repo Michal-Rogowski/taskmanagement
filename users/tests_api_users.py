@@ -61,7 +61,7 @@ class UsersApiTest(TestCase):
         self.assertEqual(res.status_code, 201, res.content)
         self.assertTrue(
             get_user_model()
-            .objects.filter(username="dave", organization=self.orgA)
+            .all_objects.filter(username="dave", organization=self.orgA)
             .exists()
         )
 
