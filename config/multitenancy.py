@@ -1,3 +1,5 @@
+import os
+
 from core.tenant import set_org
 from auth.jwt import decode_token
 from users.models import User
@@ -23,12 +25,15 @@ class OrganizationMiddleware:
                     try:
                         data = decode_token(token)
                         uid = int(data["sub"])
+
                         org_claim = data.get("org")
                         user = User.objects.get(pk=uid)
                         if org_claim != user.organization_id:
                             raise ValueError("Organization claim mismatch")
                         org_id = org_claim
                         request.user = user
+
+              
                     except Exception as e:
                         # invalid/expired token → leave user unauthenticated
                         print("JWT Decode failed:", e)
@@ -36,7 +41,11 @@ class OrganizationMiddleware:
                         org_id = None
 
             # 3) fallback (only for dev/testing)
-            if settings.DEBUG and not org_id:
+            if (
+                settings.DEBUG
+                and not org_id
+                and os.environ.get("ALLOW_ORG_OVERRIDE")
+            ):
                 q = request.GET.get("org_id")
                 if q and q.isdigit():
                     org_id = int(q)

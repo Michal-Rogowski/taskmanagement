@@ -34,5 +34,8 @@ class Task(models.Model):
 
     class Meta:
         indexes = [
-            models.Index(fields=["organization", "deadline_datetime_with_tz"], name="org_deadline_idx"),
+            models.Index(
+                fields=["organization", "deadline_datetime_with_tz", "priority"],
+                name="org_deadline_priority_idx",
+            ),
         ]

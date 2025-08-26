@@ -1,5 +1,13 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager as DjangoUserManager
 from django.db import models
+from core.tenant import get_org
+
+
+class TenantUserManager(DjangoUserManager):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        org_id = get_org()
+        return qs.filter(organization_id=org_id) if org_id else qs.none()
 
 class Organization(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -16,3 +24,5 @@ class User(AbstractUser):
         null=False,
         blank=False,
     )
+    objects = TenantUserManager()
+    all_objects = DjangoUserManager()

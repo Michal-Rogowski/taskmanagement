@@ -59,7 +59,7 @@ class AuthApiTest(TestCase):
         data = res.json()
         self.assertIn("access_token", data)
         User = get_user_model()
-        new_user = User.objects.get(username="bob")
+        new_user = User.all_objects.get(username="bob")
         self.assertEqual(new_user.organization_id, self.org.id)
 
     def test_register_duplicate_username(self):

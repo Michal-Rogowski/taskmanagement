@@ -120,13 +120,14 @@ def create_task(request, payload: TaskIn):
 
 @router.put("/{task_id}/", response=TaskOut)
 def update_task(request, task_id: int, payload: TaskUpdate):
-    _require_auth(request)
+    user = _require_auth(request)
 
-    # Scoped manager ensures same‑org; 404 if not found
     try:
-        t = Task.objects.get(pk=task_id)
+        t = Task.all_objects.get(pk=task_id)
     except Task.DoesNotExist:
         raise HttpError(404, "Not found")
+    if t.organization_id != user.organization_id:
+        raise HttpError(403, "Forbidden")
 
     if payload.title is not None:
         t.title = payload.title
@@ -166,10 +167,12 @@ def update_task(request, task_id: int, payload: TaskUpdate):
 
 @router.delete("/{task_id}/")
 def delete_task(request, task_id: int):
-    _require_auth(request)
+    user = _require_auth(request)
     try:
-        t = Task.objects.get(pk=task_id)  # scoped → same‑org only
+        t = Task.all_objects.get(pk=task_id)
     except Task.DoesNotExist:
         raise HttpError(404, "Not found")
+    if t.organization_id != user.organization_id:
+        raise HttpError(403, "Forbidden")
     t.delete()
     return Response(None, status=204)
