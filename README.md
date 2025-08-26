@@ -14,9 +14,9 @@ Copy `.env.example` to `.env` and adjust as needed:
 
 | Variable | Description | Default |
 | --- | --- | --- |
-| SECRET_KEY | Django secret key used for cryptographic signing. | changeme |
-| DEBUG | Enable debug mode (`1` turns it on). | 1 |
-| SQLITE_PATH | Path to the SQLite database file. | /var/app/data/db.sqlite3 |
+| DJANGO_SECRET_KEY / SECRET_KEY | Django secret key used for cryptographic signing. | dev-secret-key |
+| DJANGO_DEBUG / DEBUG | Enable debug mode (`1` turns it on). | 1 |
+| SQLITE_PATH | Path to the SQLite database file. | ./db.sqlite3 |
 | ALLOW_ORG_OVERRIDE | Allow dev-only `org_id` query override. | 0 |
 
 ## Multi-Tenancy
