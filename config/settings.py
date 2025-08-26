@@ -1,28 +1,31 @@
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-DEBUG = os.getenv("DEBUG", "1") == "1"
+# Settings
 
-# --- Hosts ---
+# ========
+# SECRET_KEY and DEBUG are provided by Render as DJANGO_* env vars,
+# but fall back to generic names for local development.
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", os.getenv("SECRET_KEY", "dev-secret-key"))
+DEBUG = os.getenv("DJANGO_DEBUG", os.getenv("DEBUG", "1")) == "1"
+
+# Hosts
+
+# -----
 # Render sets RENDER_EXTERNAL_URL like "https://your-service.onrender.com"
 render_url = os.getenv("RENDER_EXTERNAL_URL")
-default_hosts = ["localhost", "127.0.0.1"]
+default_hosts = ["localhost", "127.0.0.1", "testserver"]
 if render_url:
-    from urllib.parse import urlparse
     default_hosts.append(urlparse(render_url).hostname)
 
+# Allow hosts from the environment or fall back to the defaults above.
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", ",".join(default_hosts)).split(",")
-
-# Allowed hosts come from env (EB sets these)
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
-
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -72,7 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-DB_FILE = os.getenv("SQLITE_PATH", "/var/app/data/db.sqlite3")
+DB_FILE = os.getenv("SQLITE_PATH", str(BASE_DIR / "db.sqlite3"))
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -88,6 +91,5 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

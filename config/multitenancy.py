@@ -27,7 +27,7 @@ class OrganizationMiddleware:
                         uid = int(data["sub"])
 
                         org_claim = data.get("org")
-                        user = User.objects.get(pk=uid)
+                        user = User.all_objects.get(pk=uid)
                         if org_claim != user.organization_id:
                             raise ValueError("Organization claim mismatch")
                         org_id = org_claim
