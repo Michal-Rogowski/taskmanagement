@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - (placeholder)
+- Ensure all files end with a trailing newline for style consistency.
 
 ## [0.1.2] - 2025-08-24
 ### Added

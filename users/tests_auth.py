@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from users.models import Organization
+from auth.jwt import create_token
 import json
 
 BASE = "/api/v1"
@@ -44,3 +45,30 @@ class AuthApiTest(TestCase):
     def test_me_without_token_is_unauthorized(self):
         res = self.client.get(f"{BASE}/auth/me")
         self.assertEqual(res.status_code, 401)
+
+
+    def test_register_creates_user_and_returns_token(self):
+        token = create_token(self.user)
+        res = self.client.post(
+            f"{BASE}/auth/register",
+            data=json.dumps({"username": "bob", "password": "abcd"}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Bearer {token}",
+        )
+        self.assertEqual(res.status_code, 201, res.content)
+        data = res.json()
+        self.assertIn("access_token", data)
+        User = get_user_model()
+        new_user = User.objects.get(username="bob")
+        self.assertEqual(new_user.organization_id, self.org.id)
+
+    def test_register_duplicate_username(self):
+        token = create_token(self.user)
+        res = self.client.post(
+            f"{BASE}/auth/register",
+            data=json.dumps({"username": "alice", "password": "1234"}),
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Bearer {token}",
+        )
+        self.assertEqual(res.status_code, 400)
+

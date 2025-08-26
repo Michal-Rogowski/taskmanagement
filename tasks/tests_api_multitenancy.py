@@ -96,3 +96,6 @@ class TasksApiMultiTenancyTest(TestCase):
         self.assertEqual(res.status_code, 404)
         self.assertTrue(Task.all_objects.filter(pk=self.taskB1.id).exists())
 
+    def test_list_requires_authentication(self):
+        res = self.client.get(f"{BASE}/tasks/")
+        self.assertEqual(res.status_code, 401)

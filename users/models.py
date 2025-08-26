@@ -13,5 +13,6 @@ class User(AbstractUser):
         Organization,
         on_delete=models.CASCADE,
         related_name="users",
-        null=True,
+        null=False,
+        blank=False,
     )
