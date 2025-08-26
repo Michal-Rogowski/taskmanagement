@@ -24,7 +24,7 @@ class OrganizationMiddleware:
                         data = decode_token(token)
                         uid = int(data["sub"])
                         org_id = data.get("org")
-                        request.user = User.objects.get(pk=int(data["sub"]))
+                        request.user = User.all_objects.get(pk=int(data["sub"]))
                     except Exception as e:
                         # invalid/expired token → leave user unauthenticated
                         print("JWT Decode failed:", e)

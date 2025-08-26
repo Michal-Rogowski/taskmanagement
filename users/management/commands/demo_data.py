@@ -9,12 +9,12 @@ class Command(BaseCommand):
         org_a, _ = Organization.objects.get_or_create(name="OrgA")
         org_b, _ = Organization.objects.get_or_create(name="OrgB")
 
-        alice, _ = User.objects.get_or_create(username="alice", defaults={"organization": org_a})
+        alice, _ = User.all_objects.get_or_create(username="alice", defaults={"organization": org_a})
         if not alice.organization_id:
             alice.organization = org_a
         alice.set_password("1234"); alice.save()
 
-        bob, _ = User.objects.get_or_create(username="bob", defaults={"organization": org_b})
+        bob, _ = User.all_objects.get_or_create(username="bob", defaults={"organization": org_b})
         if not bob.organization_id:
             bob.organization = org_b
         bob.set_password("1234"); bob.save()

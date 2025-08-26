@@ -1,5 +1,5 @@
 from ninja import Router, Schema
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from auth.jwt import create_token
 from ninja.errors import HttpError
 
@@ -21,8 +21,8 @@ class RegisterIn(Schema):
 
 @router.post("/login", response=TokenOut)
 def login(request, payload: LoginIn):
-    user = authenticate(request, username=payload.username, password=payload.password)
-    if not user:
+    user = User.all_objects.filter(username=payload.username).first()
+    if not user or not user.check_password(payload.password):
         raise HttpError(401, "Invalid credentials")
     return {"access_token": create_token(user, minutes=60*8)}
 
