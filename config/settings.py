@@ -20,7 +20,7 @@ DEBUG = os.getenv("DJANGO_DEBUG", os.getenv("DEBUG", "1")) == "1"
 # -----
 # Render sets RENDER_EXTERNAL_URL like "https://your-service.onrender.com"
 render_url = os.getenv("RENDER_EXTERNAL_URL")
-default_hosts = ["localhost", "127.0.0.1"]
+default_hosts = ["localhost", "127.0.0.1", "testserver"]
 if render_url:
     default_hosts.append(urlparse(render_url).hostname)
 
