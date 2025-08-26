@@ -1,4 +1,4 @@
-from ninja import Schema
+from ninja import Schema, Field
 from typing import Any
 
 class TaskOut(Schema):
@@ -17,7 +17,7 @@ class TaskIn(Schema):
     priority: int = 0
     deadline_datetime_with_tz: str | None = None
     assigned_to_id: int | None = None
-    metadata: dict[str, Any] = {}
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 class TaskUpdate(Schema):
     title: str | None = None
