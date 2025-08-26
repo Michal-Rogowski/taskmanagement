@@ -18,11 +18,6 @@ services:
       - key: DJANGO_DEBUG
         value: "0"
       - key: SQLITE_PATH
-        value: "/var/data/db.sqlite3"
-      # optional: allow any host; see step 2 for safer auto-host config
+        value: "/opt/render/project/src/db.sqlite3"
       - key: ALLOWED_HOSTS
         value: "*"
-    disk:
-      name: db
-      mountPath: /var/data
-      sizeGB: 1
